@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import useFetchWithAbort from "@/hooks/useFetchStates";
@@ -7,6 +8,7 @@ interface FetchDataButtonProps {
   onSuccess?: (data: any) => void;  // Callback for when data is successfully fetched
   onError?: (error: string) => void; // Callback for when an error occurs
   onAbort?: () => void;             // Callback for when fetch is aborted
+  onReset?: () => void;             // Callback for when reset is triggered
   buttonText?: string;              // Custom text for the button
   buttonVariant?: "contained" | "outlined"; // Custom button variant
   children?: React.ReactNode;       // Allow for other children inside the button
@@ -17,6 +19,7 @@ const FetchDataButton: React.FC<FetchDataButtonProps> = ({
   onSuccess,
   onError,
   onAbort,
+  onReset,
   buttonText = "Fetch Data",
   buttonVariant = "contained",
   children,
@@ -41,6 +44,14 @@ const FetchDataButton: React.FC<FetchDataButtonProps> = ({
       onAbort();
     }
   }, [aborted, onAbort]);
+
+  // Trigger the reset callback in the parent component
+  const handleReset = () => {
+    if (onReset) {
+      onReset();
+    }
+    reset(); // Reset the local state as well
+  };
 
   return (
     <div>
@@ -69,11 +80,11 @@ const FetchDataButton: React.FC<FetchDataButtonProps> = ({
       )}
 
       {/* Reset Button */}
-      {children && (
+      {(data || error) && (
         <Button
           variant="outlined"
           color="primary"
-          onClick={reset}
+          onClick={handleReset}
           sx={{ marginRight: 2 }} // Space between buttons
         >
           Reset

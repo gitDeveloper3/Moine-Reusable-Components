@@ -8,19 +8,24 @@ const StandaloneComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleSuccess = (fetchedData: any) => {
-    console.log("success")
     setData(fetchedData);
     setError(null); // Reset error on success
   };
 
   const handleError = (fetchError: string) => {
-    console.log("error")
     setError(fetchError);
     setData(null); // Reset data on error
   };
 
   const handleAbort = () => {
     console.log("Fetch aborted");
+  };
+
+  // Handle reset by clearing data and error
+  const handleReset = () => {
+    
+    setData(null);
+    setError(null); // Reset data and error state
   };
 
   return (
@@ -30,6 +35,7 @@ const StandaloneComponent: React.FC = () => {
         onSuccess={handleSuccess}
         onError={handleError}
         onAbort={handleAbort}
+        onReset={handleReset} // Pass the reset handler
         buttonText="Fetch User Data"
       />
       {error && <Typography color="error">{error}</Typography>}
